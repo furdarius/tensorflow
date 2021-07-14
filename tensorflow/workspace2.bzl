@@ -49,6 +49,11 @@ load("@tf_toolchains//toolchains/remote_config:configs.bzl", "initialize_rbe_con
 load("@tf_toolchains//toolchains/remote:configure.bzl", "remote_execution_configure")
 load("@tf_toolchains//toolchains/clang6:repo.bzl", "clang6_configure")
 
+
+load("@rules_fuzzing//fuzzing:repositories.bzl", "rules_fuzzing_dependencies")
+#load("@rules_fuzzing//fuzzing:init.bzl", "rules_fuzzing_init")
+
+
 def _initialize_third_party():
     """ Load third party repositories.  See above load() statements. """
     FP16()
@@ -74,6 +79,8 @@ def _initialize_third_party():
     ruy()
     sobol_data()
     vulkan_headers()
+    rules_fuzzing_dependencies()
+  #  rules_fuzzing_init()
 
 # Toolchains & platforms required by Tensorflow to build.
 def _tf_toolchains():

@@ -31,6 +31,8 @@ limitations under the License.
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/platform/profile_utils/android_armv7a_cpu_utils_helper.h"
 
+#include "tcmalloc/malloc_extension.h"
+
 namespace tensorflow {
 namespace profile_utils {
 
@@ -76,6 +78,39 @@ static ICpuUtilsHelper* cpu_utils_helper_instance_ = nullptr;
                                        GetCycleCounterFrequency());
 }
 
+
+void testtcmalloc() {
+	LOG(INFO) << "TESTTCMALLOC" << std::endl;
+
+  absl::optional<size_t> heap_size =
+      tcmalloc::MallocExtension::GetNumericProperty(
+          "generic.current_allocated_bytes");
+  if (heap_size.has_value()) {
+    LOG(INFO) << "Current heap size = " << *heap_size << " bytes" << std::endl;
+  }
+
+  // Allocate memory, printing the pointer to deter an optimizing compiler from
+  // eliding the allocation.
+  constexpr size_t kSize = 1024 * 1024 * 1024;
+  std::unique_ptr<char[]> ptr(new char[kSize]);
+
+  heap_size = tcmalloc::MallocExtension::GetNumericProperty(
+      "generic.current_allocated_bytes");
+  if (heap_size.has_value()) {
+    LOG(INFO) << "Current heap size = " << *heap_size << " bytes" << std::endl;
+  }
+
+  void* ptr2 = malloc(kSize);
+
+  heap_size = tcmalloc::MallocExtension::GetNumericProperty(
+      "generic.current_allocated_bytes");
+  if (heap_size.has_value()) {
+    LOG(INFO) << "Current heap size = " << *heap_size << " bytes" << std::endl;
+  }
+
+  free(ptr2);
+}
+
 /* static */ int64 CpuUtils::GetCycleCounterFrequencyImpl() {
 // TODO(satok): do not switch by macro here
 #if defined(__ANDROID__)
@@ -112,6 +147,9 @@ static ICpuUtilsHelper* cpu_utils_helper_instance_ = nullptr;
       const int64 freq_n =
           static_cast<int64>(freq_ghz * 1000.0 * 1000.0 * 1000.0);
       LOG(INFO) << "CPU Frequency: " << freq_n << " Hz";
+
+      testtcmalloc();
+
       return freq_n;
     }
   }

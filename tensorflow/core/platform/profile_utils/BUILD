@@ -55,6 +55,7 @@ cc_library(
         "//tensorflow/core/platform:macros",
         "//tensorflow/core/platform:types",
         "@com_google_absl//absl/base",
+	"@com_google_tcmalloc//tcmalloc:malloc_extension",
     ],
     alwayslink = 1,
 )

@@ -942,7 +942,9 @@ tf_cc_shared_object(
         "//tensorflow/core/profiler:profiler_impl",
         "//tensorflow/stream_executor:stream_executor_impl",
         "//tensorflow:tf_framework_version_script.lds",
+	"@com_google_tcmalloc//tcmalloc:malloc_extension",
     ] + tf_additional_binary_deps(),
+    malloc = "@com_google_tcmalloc//tcmalloc",
 )
 
 # This is intended to be the same as tf_binary_additional_srcs:
@@ -1002,7 +1004,9 @@ tf_cc_shared_object(
         "//tensorflow/c/eager:c_api_experimental",
         "//tensorflow/core:distributed_tensorflow_dependencies",
         "//tensorflow/core:tensorflow",
+	"@com_google_tcmalloc//tcmalloc:malloc_extension",
     ],
+    malloc = "@com_google_tcmalloc//tcmalloc",
 )
 
 tf_cc_shared_object(
@@ -1040,7 +1044,9 @@ tf_cc_shared_object(
         "//tensorflow/cc:client_session",
         "//tensorflow/cc:scope",
         "//tensorflow/core:tensorflow",
+	"@com_google_tcmalloc//tcmalloc:malloc_extension",
     ],
+    malloc = "@com_google_tcmalloc//tcmalloc",
 )
 
 # ** Targets for Windows build (start) **
